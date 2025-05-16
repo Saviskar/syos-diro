@@ -1,6 +1,5 @@
 package main.com.syos.repository.Impl;
 
-import main.com.syos.model.Batch;
 import main.com.syos.model.Bill;
 import main.com.syos.repository.BillDAO;
 import main.com.syos.util.db.DBConnection;
@@ -32,17 +31,17 @@ public class BillDAOImpl implements BillDAO {
 
             ps.executeUpdate();
 
-            // Optional: retrieve auto-generated bill_id
+            // Retrieve and set generated bill_id
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    bill.setBillId(rs.getInt(1)); // set generated ID back to the object
+                    bill.setBillId(rs.getInt(1));
                 }
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to create bill on date: " + bill.getBillDate(), e);
         }
-
     }
 
     @Override
@@ -68,8 +67,9 @@ public class BillDAOImpl implements BillDAO {
                 );
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to find bill with ID: " + billId, e);
         }
 
         return null;
@@ -100,8 +100,9 @@ public class BillDAOImpl implements BillDAO {
                 bills.add(bill);
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to retrieve bills for date: " + date, e);
         }
 
         return bills;

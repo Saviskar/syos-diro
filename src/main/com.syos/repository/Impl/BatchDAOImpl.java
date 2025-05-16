@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class BatchDAOImpl implements BatchDAO {
 
@@ -26,16 +25,16 @@ public class BatchDAOImpl implements BatchDAO {
             ps.setInt(1, batch.getBatchId());
             ps.setString(2, batch.getItemCode());
             ps.setInt(3, batch.getQtyReceived());
-            ps.setDate(4, java.sql.Date.valueOf(batch.getDateReceived())); //MIGHT CAUSE ISSUE
-            ps.setDate(5, java.sql.Date.valueOf(batch.getExpiryDate())); //MIGHT CAUSE ISSUE
+            ps.setDate(4, java.sql.Date.valueOf(batch.getDateReceived()));
+            ps.setDate(5, java.sql.Date.valueOf(batch.getExpiryDate()));
 
             ps.executeUpdate();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to create batch with ID: " + batch.getBatchId(), e);
         }
     }
-
 
     @Override
     public Batch findById(int batchId) throws SQLException {
@@ -58,14 +57,14 @@ public class BatchDAOImpl implements BatchDAO {
                 );
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to find batch by ID: " + batchId, e);
         }
 
         return null;
     }
 
-    // should we really create list? cant we just get the item from this item code what are the pros and cons
     @Override
     public List<Batch> findByItemCode(String itemCode) throws SQLException {
         String sql = "SELECT * FROM batch WHERE item_code = ?";
@@ -89,8 +88,9 @@ public class BatchDAOImpl implements BatchDAO {
                 batches.add(batch);
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to find batches by item code: " + itemCode, e);
         }
 
         return batches;
@@ -119,8 +119,9 @@ public class BatchDAOImpl implements BatchDAO {
                 batches.add(batch);
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to find batches expiring before: " + date, e);
         }
 
         return batches;
@@ -138,9 +139,9 @@ public class BatchDAOImpl implements BatchDAO {
 
             ps.executeUpdate();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to update qty_received for batch ID: " + batchId, e);
         }
     }
-
 }

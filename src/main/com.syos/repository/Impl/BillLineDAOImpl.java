@@ -27,15 +27,15 @@ public class BillLineDAOImpl implements BillLineDAO {
 
             ps.executeUpdate();
 
-            // Optional: get auto-generated bill_line_id
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    line.setBillLineId(rs.getInt(1)); // set back to object
+                    line.setBillLineId(rs.getInt(1));
                 }
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to create bill line for bill ID: " + line.getBillId(), e);
         }
     }
 
@@ -61,11 +61,11 @@ public class BillLineDAOImpl implements BillLineDAO {
                 lines.add(line);
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to retrieve bill lines for bill ID: " + billId, e);
         }
 
         return lines;
     }
-
 }

@@ -1,6 +1,5 @@
 package main.com.syos.repository.Impl;
 
-import main.com.syos.model.Batch;
 import main.com.syos.model.Item;
 import main.com.syos.repository.ItemDAO;
 import main.com.syos.util.db.DBConnection;
@@ -11,15 +10,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ItemDAOImpl implements ItemDAO {
 
     @Override
     public void createItem(Item item) throws SQLException {
-
-        String sql = "INSERT INTO item (item_code, name, unit_price, reorder_level)";
+        String sql = "INSERT INTO item (item_code, name, unit_price, reorder_level) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -31,21 +28,20 @@ public class ItemDAOImpl implements ItemDAO {
 
             ps.executeUpdate();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to create item with code: " + item.getItemCode(), e);
         }
     }
 
     @Override
     public Item findByCode(String code) throws SQLException {
-
         String sql = "SELECT * FROM item WHERE item_code = ?";
 
         try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, code);
-
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -57,8 +53,9 @@ public class ItemDAOImpl implements ItemDAO {
                 );
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to find item with code: " + code, e);
         }
 
         return null;
@@ -66,7 +63,6 @@ public class ItemDAOImpl implements ItemDAO {
 
     @Override
     public List<Item> findAll() throws SQLException {
-
         String sql = "SELECT * FROM item";
         List<Item> items = new ArrayList<>();
 
@@ -84,13 +80,13 @@ public class ItemDAOImpl implements ItemDAO {
                 items.add(item);
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to retrieve all items", e);
         }
 
         return items;
     }
-
 
     @Override
     public void updatePrice(String code, double newPrice) throws SQLException {
@@ -104,8 +100,9 @@ public class ItemDAOImpl implements ItemDAO {
 
             ps.executeUpdate();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to update price for item with code: " + code, e);
         }
     }
 
@@ -121,8 +118,9 @@ public class ItemDAOImpl implements ItemDAO {
 
             ps.executeUpdate();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to update reorder level for item with code: " + code, e);
         }
     }
 
@@ -136,9 +134,9 @@ public class ItemDAOImpl implements ItemDAO {
             ps.setString(1, code);
             ps.executeUpdate();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Failed to delete item with code: " + code, e);
         }
     }
-
 }

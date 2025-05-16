@@ -22,11 +22,11 @@ public class ShelfStockDAOImpl implements ShelfStockDAO {
 
             ps.setInt(1, stock.getBatchId());
             ps.setInt(2, stock.getQtyOnShelf());
-
             ps.executeUpdate();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Error creating shelf stock for batch ID: " + stock.getBatchId(), e);
         }
     }
 
@@ -35,10 +35,9 @@ public class ShelfStockDAOImpl implements ShelfStockDAO {
         String sql = "SELECT * FROM shelfstock WHERE shelf_stock_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
-                    PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, shelfStockId);
-
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -48,8 +47,10 @@ public class ShelfStockDAOImpl implements ShelfStockDAO {
                         rs.getInt("qty_on_shelf")
                 );
             }
-        } catch (Exception e) {
+
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Error finding shelf stock by ID: " + shelfStockId, e);
         }
 
         return null;
@@ -61,23 +62,23 @@ public class ShelfStockDAOImpl implements ShelfStockDAO {
         List<ShelfStock> shelfStocks = new ArrayList<>();
 
         try (Connection conn = DBConnection.getConnection();
-                    PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-                ps.setInt(1,batchId);
+            ps.setInt(1, batchId);
+            ResultSet rs = ps.executeQuery();
 
-                ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ShelfStock shelfStock = new ShelfStock(
+                        rs.getInt("shelf_stock_id"),
+                        rs.getInt("batch_id"),
+                        rs.getInt("qty_on_shelf")
+                );
+                shelfStocks.add(shelfStock);
+            }
 
-                while(rs.next()) {
-                    ShelfStock shelfStock = new ShelfStock(
-                            rs.getInt("shelf_stock_id"),
-                            rs.getInt("batch_id"),
-                            rs.getInt("qty_on_shelf")
-                    );
-                    shelfStocks.add(shelfStock);
-                }
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Error finding shelf stocks by batch ID: " + batchId, e);
         }
 
         return shelfStocks;
@@ -88,15 +89,15 @@ public class ShelfStockDAOImpl implements ShelfStockDAO {
         String sql = "UPDATE shelfstock SET qty_on_shelf = ? WHERE shelf_stock_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
-                    PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, newQty);
             ps.setInt(2, shelfStockId);
-
             ps.executeUpdate();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Error updating quantity for shelf stock ID: " + shelfStockId, e);
         }
     }
 }

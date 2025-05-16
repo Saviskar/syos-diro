@@ -1,11 +1,9 @@
 package main.com.syos.repository.Impl;
 
-import main.com.syos.model.Item;
 import main.com.syos.model.OnlineOrder;
 import main.com.syos.repository.OnlineOrderDAO;
 import main.com.syos.util.db.DBConnection;
 
-import java.io.DataInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,29 +27,26 @@ public class OnlineOrderDAOImpl implements OnlineOrderDAO {
 
             ps.executeUpdate();
 
-            // Retrieve generated order_id if needed
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    order.setOrderId(rs.getInt(1)); // set auto-generated ID back to the object
+                    order.setOrderId(rs.getInt(1));
                 }
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Error creating online order for user ID: " + order.getUserId(), e);
         }
     }
 
-
     @Override
     public OnlineOrder findById(int orderId) throws SQLException {
-
         String sql = "SELECT * FROM onlineorder WHERE order_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, orderId);
-
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -64,13 +59,13 @@ public class OnlineOrderDAOImpl implements OnlineOrderDAO {
                 );
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Error finding online order with ID: " + orderId, e);
         }
 
         return null;
     }
-
 
     @Override
     public List<OnlineOrder> findByUserId(int userId) throws SQLException {
@@ -94,13 +89,13 @@ public class OnlineOrderDAOImpl implements OnlineOrderDAO {
                 orders.add(order);
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Error retrieving orders for user ID: " + userId, e);
         }
 
         return orders;
     }
-
 
     @Override
     public void updateStatus(int orderId, String newStatus) throws SQLException {
@@ -111,12 +106,11 @@ public class OnlineOrderDAOImpl implements OnlineOrderDAO {
 
             ps.setString(1, newStatus);
             ps.setInt(2, orderId);
-
             ps.executeUpdate();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException("Error updating status for order ID: " + orderId, e);
         }
     }
-
 }
