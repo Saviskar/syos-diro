@@ -16,5 +16,5 @@ public interface UserAccountDAO {
     void updatePassword(int userId, String newHash) throws SQLException;
 
     // Deactivates (logical delete) a user account.
-    void deactivateUser(int userId) throws SQLException;
+    // void deactivateUser(int userId) throws SQLException;
 }

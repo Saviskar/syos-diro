@@ -4,7 +4,6 @@ import main.com.syos.model.ShelfStock;
 import main.com.syos.repository.ShelfStockDAO;
 import main.com.syos.util.db.DBConnection;
 
-import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
