@@ -96,6 +96,33 @@ public class BatchDAOImpl implements BatchDAO {
         return batches;
     }
 
+    // create findbybatchid and findall in dao
+
+    @Override
+    public List<Batch> findAll() throws SQLException {
+        String sql = "SELECT * FROM batch";
+        List<Batch> batches = new ArrayList<>();
+
+        try(Connection conn = DBConnection.getConnection();
+                    PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Batch batch = new Batch(
+                        rs.getInt("batch_id"),
+                        rs.getString("item_code"),
+                        rs.getInt("qty_received"),
+                        rs.getDate("date_received").toLocalDate(),
+                        rs.getDate("expiry_date").toLocalDate()
+                );
+                batches.add(batch);
+            }
+        }
+
+        return  batches;
+    }
+
     @Override
     public List<Batch> findExpiringBefore(LocalDate date) throws SQLException {
         String sql = "SELECT * FROM batch WHERE expiry_date < ?";

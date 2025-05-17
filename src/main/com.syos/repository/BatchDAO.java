@@ -13,6 +13,9 @@ public interface BatchDAO {
     // Retrieves a Batch record by its database ID.
     Batch findById(int batchId) throws SQLException;
 
+    // Find all batches regardless of the batch_id
+    List<Batch> findAll() throws SQLException;
+
     // Retrieves all batches associated with a specific item code.
     List<Batch> findByItemCode(String itemCode) throws SQLException;
 
