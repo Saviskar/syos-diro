@@ -15,6 +15,9 @@ public interface ShelfStockDAO {
     // Lists all shelf stock entries for a given batch.
     List<ShelfStock> findByBatchId(int batchId) throws SQLException;
 
+    // List all shelf stock entries
+    List<ShelfStock> findAll() throws SQLException;
+
     // Updates the quantity currently on the shelf for a batch.
     void updateQtyOnShelf(int shelfStockId, int newQty) throws SQLException;
 }

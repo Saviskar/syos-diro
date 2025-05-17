@@ -31,6 +31,31 @@ public class ShelfStockDAOImpl implements ShelfStockDAO {
     }
 
     @Override
+    public List<ShelfStock> findAll() throws SQLException {
+        String sql = "SELECT * FROM shelfstock";
+        List<ShelfStock> shelfStocks = new ArrayList<>();
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ShelfStock shelfStock = new ShelfStock(
+                        rs.getInt("shelf_stock_id"),
+                        rs.getInt("batch_id"),
+                        rs.getInt("qty_on_shelf")
+                );
+                shelfStocks.add(shelfStock);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        return shelfStocks;
+    }
+    @Override
     public ShelfStock findById(int shelfStockId) throws SQLException {
         String sql = "SELECT * FROM shelfstock WHERE shelf_stock_id = ?";
 
