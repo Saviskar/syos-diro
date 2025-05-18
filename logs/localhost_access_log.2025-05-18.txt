@@ -1,0 +1,13 @@
+0:0:0:0:0:0:0:1 - - [18/May/2025:07:53:16 +0530] "GET /syos-diro-final-final/api/orders?user_id=1 HTTP/1.1" 404 683
+0:0:0:0:0:0:0:1 - - [18/May/2025:07:53:29 +0530] "GET /syos-backend HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [18/May/2025:07:53:31 +0530] "GET /syos-backend/ HTTP/1.1" 200 57
+0:0:0:0:0:0:0:1 - - [18/May/2025:07:53:31 +0530] "GET /favicon.ico HTTP/1.1" 404 683
+0:0:0:0:0:0:0:1 - - [18/May/2025:07:55:16 +0530] "GET /%7Byour-app-context%7D/api/reports/reshelve?date=YYYY-MM-DD HTTP/1.1" 404 683
+0:0:0:0:0:0:0:1 - - [18/May/2025:07:55:46 +0530] "GET /syos-backend/api/reports/reshelve?date=2025-05-17 HTTP/1.1" 200 199
+0:0:0:0:0:0:0:1 - - [18/May/2025:08:12:42 +0530] "GET /syos-backend/api/items/ITM001 HTTP/1.1" 404 793
+0:0:0:0:0:0:0:1 - - [18/May/2025:08:13:04 +0530] "GET /syos-backend/api/items/ITM001 HTTP/1.1" 404 793
+0:0:0:0:0:0:0:1 - - [18/May/2025:09:48:49 +0530] "GET /syos-backend/api/items HTTP/1.1" 200 391
+0:0:0:0:0:0:0:1 - - [18/May/2025:09:50:27 +0530] "GET /syos-backend/api/items/ITM001 HTTP/1.1" 200 73
+0:0:0:0:0:0:0:1 - - [18/May/2025:09:50:27 +0530] "GET /syos-backend/api/items/ITM001 HTTP/1.1" 200 73
+0:0:0:0:0:0:0:1 - - [18/May/2025:09:50:40 +0530] "OPTIONS /syos-backend/api/checkout HTTP/1.1" 200 -
+0:0:0:0:0:0:0:1 - - [18/May/2025:09:50:40 +0530] "POST /syos-backend/api/checkout HTTP/1.1" 200 129
