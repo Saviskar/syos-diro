@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet("/api/reorder")
+@WebServlet("/api/reports/reorder")
 public class ReorderServlet extends HttpServlet {
     private CheckReorderUseCase checkReorder;
     private ObjectMapper mapper;
