@@ -12,6 +12,8 @@ import main.com.syos.repository.Impl.ShelfStockDAOImpl;
 import main.com.syos.repository.ItemDAO;
 import main.com.syos.repository.ShelfStockDAO;
 import main.com.syos.service.ProcessCheckoutUseCase;
+import main.com.syos.repository.BatchDAO;
+import main.com.syos.repository.Impl.BatchDAOImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -36,9 +38,10 @@ public class CheckoutServlet extends HttpServlet {
         BillDAO billDAO           = new BillDAOImpl();
         BillLineDAO billLineDAO   = new BillLineDAOImpl();
         ShelfStockDAO shelfDAO    = new ShelfStockDAOImpl();
+        BatchDAO batchDAO         = new BatchDAOImpl();
         // Wire up use case
         this.checkoutUseCase = new ProcessCheckoutUseCase(
-                itemDAO, billDAO, billLineDAO, shelfDAO
+                itemDAO, billDAO, billLineDAO, shelfDAO, batchDAO
         );
         // Configure JSON mapper for Java time support
         this.objectMapper = new ObjectMapper();
